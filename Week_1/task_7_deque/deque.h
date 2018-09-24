@@ -17,13 +17,13 @@ public:
         return *prev(toPushFront.end());
     }
     const T& Front()const{
-        return Front();
+        return *prev(toPushFront.end());
     }
     T& Back(){
         return *prev(toPushBack.end());
     }
     const T& Back()const{
-        return Back();
+        return *prev(toPushBack.end());
     }
 
     T& At(size_t index){
@@ -38,7 +38,15 @@ public:
         }
     }
     const T& At(size_t index) const{
-        return At(index);
+        if(index < toPushFront.size()){
+            return toPushFront.at(toPushFront.size() - index - 1);
+        }else{
+            if(index == toPushFront.size()){
+                return toPushBack[index];
+            }else{
+                return toPushBack.at(index - toPushFront.size() + 1);
+            }
+        }
     }
 
     T& operator[](size_t index){
@@ -50,10 +58,10 @@ public:
     }
 
     const T& operator[](size_t index) const{
-        if(index <= toPushFront.size()){
-            return toPushFront[(toPushFront.size() - index)];
+        if(index < toPushFront.size()){
+            return toPushFront[toPushFront.size() - index - 1];
         }else{
-            return toPushBack[(index - toPushFront.size() - 1)];
+            return toPushBack[index + 1 - toPushFront.size()];
         }
     }
 
