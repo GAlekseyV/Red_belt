@@ -7,19 +7,39 @@
 using namespace std;
 
 // Реализуйте шаблон класса Paginator
+template <typename Iterator>
+class IteratorRange {
+private:
+    Iterator first, last;
+    size_t size_;
+public:
+    IteratorRange(Iterator begin, Iterator end)
+    : first(begin)
+    , last(end)
+    , size_(distance(first, last)){
+    }
+    Iterator begin()const{
+        return first;
+    }
+    Iterator end()const{
+        return last;
+    }
+    size_t size() const{
+        return size_;
+    }
+};
 
 template <typename Iterator>
 class Paginator {
 public:
-    Paginator(Iterator begin, Iterator end, size_t size) {
-        //
-        if(begin != end){
-            while(begin + size < end)
-            {
-                pages.push_back(Page(begin, begin + size));
-                begin += size;
-            }
-            pages.push_back(Page(begin, end));
+    Paginator(Iterator begin, Iterator end, size_t page_size) {
+        for(size_t left = distance(begin, end); left > 0;){
+            size_t current_page_size = min(page_size, left);
+            Iterator current_page_end = next(begin, current_page_size);
+            pages.push_back({begin, current_page_end});
+
+            left -= current_page_size;
+            begin = current_page_end;
         }
     }
 
@@ -36,28 +56,9 @@ public:
         return pages.end();
     }
 
-    class Page {
-    private:
-        Iterator first, last;
-    public:
-        Page(Iterator begin, Iterator end)
-        : first(begin)
-        , last(end){
-        }
-        Iterator begin()const{
-            return first;
-        }
-        Iterator end()const{
-            return last;
-        }
-        size_t size() const{
-            return last - first;
-        }
-    };
-
 private:
     //Iterator first, last;
-    vector<Page> pages;
+    vector<IteratorRange<Iterator>> pages;
     //const size_t page_size;
 };
 
