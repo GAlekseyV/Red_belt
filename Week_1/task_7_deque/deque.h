@@ -10,92 +10,77 @@
 
 using namespace std;
 template <typename T>
-
 class Deque{
 public:
+    Deque() = default;
+
     T& Front(){
-        return *prev(toPushFront.end());
+        return head.empty() ? tail.front() : head.back();
     }
     const T& Front()const{
-        return *prev(toPushFront.end());
+        return head.empty() ? tail.front() : head.back();
     }
     T& Back(){
-        return *prev(toPushBack.end());
+        return tail.empty() ? head.front() : tail.back();
     }
     const T& Back()const{
-        return *prev(toPushBack.end());
+        return tail.empty() ? head.front() : tail.back();
     }
 
     T& At(size_t index){
-        if(index < toPushFront.size()){
-            return toPushFront.at(toPushFront.size() - index - 1);
-        }else{
-            if(index == toPushFront.size()){
-                return toPushBack[index];
-            }else{
-                return toPushBack.at(index - toPushFront.size() + 1);
-            }
-        }
+        CheckIndex(index);
+        return (*this)[index];
     }
     const T& At(size_t index) const{
-        if(index < toPushFront.size()){
-            return toPushFront.at(toPushFront.size() - index - 1);
-        }else{
-            if(index == toPushFront.size()){
-                return toPushBack[index];
-            }else{
-                return toPushBack.at(index - toPushFront.size() + 1);
-            }
-        }
+        CheckIndex(index);
+        return (*this)[index];
     }
 
     T& operator[](size_t index){
-        if(index < toPushFront.size()){
-            return toPushFront[toPushFront.size() - index - 1];
+        if(index < head.size()){
+            return head[head.size() - index - 1];
         }else{
-            return toPushBack[index + 1 - toPushFront.size()];
+            return tail[index - head.size()];
         }
     }
 
     const T& operator[](size_t index) const{
-        if(index < toPushFront.size()){
-            return toPushFront[toPushFront.size() - index - 1];
+        if(index < head.size()){
+            return head[head.size() - index - 1];
         }else{
-            return toPushBack[index + 1 - toPushFront.size()];
+            return tail[index - head.size()];
         }
     }
 
     bool Empty()const{
-        return toPushFront.empty() && toPushBack.empty();
+        return head.empty() && tail.empty();
     }
-    void PushBack(const T& item){
-        if(Empty()){
-            toPushFront.push_back(item);
-            toPushBack.push_back(item);
-        }else{
-            toPushBack.push_back(item);
-        }
 
+    void Clear(){
+        head.clear();
+        tail.clear();
+    }
+
+    void PushBack(const T& item){
+        tail.push_back(item);
     }
     void PushFront(const T& item){
-        if(Empty()){
-            toPushFront.push_back(item);
-            toPushBack.push_back(item);
-        }else{
-            toPushFront.push_back(item);
-        }
+        head.push_back(item);
     }
 
     size_t Size()const{
-        if(toPushFront.empty() || toPushBack.empty()){
-            return toPushFront.size() + toPushBack.size();
-        }
-        return toPushFront.size() + toPushBack.size() - 1;
+        return head.size() + tail.size();
     }
 
 private:
-    vector<T> toPushFront;
-    vector<T> toPushBack;
+    void CheckIndex(size_t i){
+        if(i >= Size()){
+            throw out_of_range("Index is out of range");
+        }
+    }
+
+    vector<T> head;
+    vector<T> tail;
 };
 
 #endif //RED_BELT_DEQUE_H

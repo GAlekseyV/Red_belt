@@ -42,7 +42,7 @@ void TestDeque() {
         d.PushFront("One");
         d.PushBack("Two");
         exp_d.push_front("One");
-        exp_d.emplace_back("Two");
+        exp_d.push_back("Two");
         ASSERT_EQUAL(d.Size(), exp_d.size());
         ASSERT_EQUAL(d.Front(), exp_d.front());
         ASSERT_EQUAL(d.Back(), exp_d.back());
