@@ -20,6 +20,8 @@ set(Week_1
         task_5_uniq_id
         task_6_table
         task_7_deque
+        task_8_paginator
+        Lecture_example
 )
 
 set(Week_2
