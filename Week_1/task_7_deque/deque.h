@@ -30,7 +30,11 @@ public:
         if(index < toPushFront.size()){
             return toPushFront.at(toPushFront.size() - index - 1);
         }else{
-            return toPushBack.at(index - toPushFront.size());
+            if(index == toPushFront.size()){
+                return toPushBack[index];
+            }else{
+                return toPushBack.at(index - toPushFront.size() + 1);
+            }
         }
     }
     const T& At(size_t index) const{

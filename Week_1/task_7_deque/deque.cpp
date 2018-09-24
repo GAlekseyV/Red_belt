@@ -99,7 +99,7 @@ void TestDeque() {
         ASSERT_EQUAL(d.Front(), exp_d.front());
         ASSERT_EQUAL(d.Back(), exp_d.back());
         ASSERT_EQUAL(d.At(0), exp_d.at(0));
-        ASSERT_EQUAL(d.At(4), exp_d.at(4));
+        ASSERT_EQUAL(d.At(3), exp_d.at(3));
         ASSERT_EQUAL(d[1], exp_d[1]);
         ASSERT_EQUAL(d[3], exp_d[3]);
     }
