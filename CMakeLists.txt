@@ -27,6 +27,7 @@ set(Week_1
 set(Week_2
         task_1_sort_students
         task_2_learner
+        task_3_expresses
 )
 
 set(Week_3
