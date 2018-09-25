@@ -25,6 +25,7 @@ set(Week_1
 )
 
 set(Week_2
+        profile
 )
 
 set(Week_3
