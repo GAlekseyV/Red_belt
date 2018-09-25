@@ -25,7 +25,7 @@ set(Week_1
 )
 
 set(Week_2
-        profile
+        task_1_sort_students
 )
 
 set(Week_3
