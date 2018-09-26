@@ -22,35 +22,45 @@ bool operator<(const User& lhs, const User& rhs){
 
 class ReadingManager {
 public:
-  ReadingManager() {}
+  ReadingManager()
+  : user_page_counts_(vector<int>(MAX_USER_COUNT_ + 1, -1))
+  , count_users(0){}
 
   void Read(int user_id, int page_count) {
      //  Пользователя с id не существует
-    if(user_to_pages.count(user_id) == 0){
-        user_to_pages[user_id] = page_count;
+    if(user_page_counts_[user_id] == -1){
+        user_page_counts_[user_id] = page_count;
         pages_to_user_ids[page_count].insert(user_id);
+        count_users++;
     }else{
-        pages_to_user_ids[user_to_pages[user_id]].erase(user_id);
-        user_to_pages[user_id] = page_count;
+        pages_to_user_ids[user_page_counts_[user_id]].erase(user_id);
+        user_page_counts_[user_id] = page_count;
         pages_to_user_ids[page_count].insert(user_id);
     }
   }
 
   double Cheer(int user_id) const {
-      if (user_to_pages.count(user_id) == 0) {
+      if (user_page_counts_[user_id] == -1) {
           return 0;
       }
-      if (user_to_pages.size() == 1) {
+      if (count_users == 1) {
           return 1;
       }
       // Всего пользователей
       // Указатель на первый итератор равный или больший заданному.
-      auto it_greater = pages_to_user_ids.lower_bound(user_to_pages.at(user_id));
+      auto it_greater = pages_to_user_ids.lower_bound(user_page_counts_[user_id]);
       int user_count_less_pages = 0;
-      for (auto it = pages_to_user_ids.begin(); it != it_greater; ++it) {
-          user_count_less_pages += it->second.size();
+      if(it_greater->first > pages_to_user_ids.size()/2){
+          for(auto it = it_greater; it != pages_to_user_ids.end(); it++){
+              user_count_less_pages += it->second.size();
+          }
+          user_count_less_pages = count_users - user_count_less_pages;
+      }else {
+          for (auto it = pages_to_user_ids.begin(); it != it_greater; ++it) {
+              user_count_less_pages += it->second.size();
+          }
       }
-      return (user_count_less_pages) * 1.0 / (user_to_pages.size() - 1);
+      return (user_count_less_pages) * 1.0 / (count_users - 1);
   }
 
 private:
@@ -61,12 +71,12 @@ private:
   // следующим образом: ReadingManager::MAX_USER_COUNT.
   static const int MAX_USER_COUNT_ = 100'000;
   static const int MAX_PAGES = 1000;
-
-//  vector<int> user_page_counts_;
+    int count_users;
+  vector<int> user_page_counts_;
 //  vector<int> sorted_users_;   // отсортированы по убыванию количества страниц
 //  vector<int> user_positions_; // позиции в векторе sorted_users_
 
-  map<int, int> user_to_pages;
+  //map<int, int> user_to_pages;
   map<int, set<int>> pages_to_user_ids;
   set<User> users;
 
@@ -87,7 +97,7 @@ private:
 };
 
 
-int main() {
+int main1(){
   // Для ускорения чтения данных отключается синхронизация
   // cin и cout с stdio,
   // а также выполняется отвязка cin от cout
@@ -121,7 +131,7 @@ int main() {
   return 0;
 }
 
-int main1(){
+int main(){
     // Для ускорения чтения данных отключается синхронизация
     // cin и cout с stdio,
     // а также выполняется отвязка cin от cout
