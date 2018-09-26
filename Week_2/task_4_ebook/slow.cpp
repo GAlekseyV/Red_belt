@@ -11,100 +11,67 @@
 
 using namespace std;
 
-struct User{
-    int user_id;
-    int page_count;
-};
-
-bool operator<(const User& lhs, const User& rhs){
-    return lhs.page_count < rhs.page_count;
-}
-
 class ReadingManager {
 public:
-  ReadingManager()
-  : user_page_counts_(vector<int>(MAX_USER_COUNT_ + 1, -1))
-  , count_users(0){}
+    ReadingManager()
+    // -1 значит, что не случилось ни одного READ
+            : user_page_counts_(MAX_USER_COUNT_ + 1, -1),
+              page_achieved_by_count_(MAX_PAGE_COUNT_ + 1, 0) {}
 
-  void Read(int user_id, int page_count) {
-     //  Пользователя с id не существует
-    if(user_page_counts_[user_id] == -1){
-        user_page_counts_[user_id] = page_count;
-        pages_to_user_ids[page_count].insert(user_id);
-        count_users++;
-    }else{
-        pages_to_user_ids[user_page_counts_[user_id]].erase(user_id);
-        user_page_counts_[user_id] = page_count;
-        pages_to_user_ids[page_count].insert(user_id);
+    void Read(int user_id, int page_count) {
+      UpdatePageRange(user_page_counts_[user_id] + 1, page_count + 1);
+      user_page_counts_[user_id] = page_count;
     }
-  }
 
-  double Cheer(int user_id) const {
-      if (user_page_counts_[user_id] == -1) {
-          return 0;
+    double Cheer(int user_id) const {
+      const int pages_count = user_page_counts_[user_id];
+      if (pages_count == -1) {
+        return 0;
       }
-      if (count_users == 1) {
-          return 1;
+      const int user_count = GetUserCount();
+      if (user_count == 1) {
+        return 1;
       }
-      // Всего пользователей
-      // Указатель на первый итератор равный или больший заданному.
-      auto it_greater = pages_to_user_ids.lower_bound(user_page_counts_[user_id]);
-      int user_count_less_pages = 0;
-      if(it_greater->first > pages_to_user_ids.size()/2){
-          for(auto it = it_greater; it != pages_to_user_ids.end(); it++){
-              user_count_less_pages += it->second.size();
-          }
-          user_count_less_pages = count_users - user_count_less_pages;
-      }else {
-          for (auto it = pages_to_user_ids.begin(); it != it_greater; ++it) {
-              user_count_less_pages += it->second.size();
-          }
-      }
-      return (user_count_less_pages) * 1.0 / (count_users - 1);
-  }
+      // По умолчанию деление целочисленное, поэтому
+      // нужно привести числитель к типу double.
+      // Простой способ сделать это — умножить его на 1.0.
+      return (user_count - page_achieved_by_count_[pages_count]) * 1.0
+             / (user_count - 1);
+    }
 
 private:
-  // Статическое поле не принадлежит какому-то конкретному
-  // объекту класса. По сути это глобальная переменная,
-  // в данном случае константная.
-  // Будь она публичной, к ней можно было бы обратиться снаружи
-  // следующим образом: ReadingManager::MAX_USER_COUNT.
-  static const int MAX_USER_COUNT_ = 100'000;
-  static const int MAX_PAGES = 1000;
-    int count_users;
-  vector<int> user_page_counts_;
-//  vector<int> sorted_users_;   // отсортированы по убыванию количества страниц
-//  vector<int> user_positions_; // позиции в векторе sorted_users_
+    // Статическое поле не принадлежит какому-либо конкретному объекту класса.
+    // По сути это глобальная переменная, в данном случае - константная.
+    // Будь она публичной, к ней можно было бы обратиться снаружи
+    // следующим образом: ReadingManager::MAX_USER_COUNT.
+    static const int MAX_USER_COUNT_ = 100'000;
+    static const int MAX_PAGE_COUNT_ = 1'000;
 
-  //map<int, int> user_to_pages;
-  map<int, set<int>> pages_to_user_ids;
-  set<User> users;
+    // Номер страницы, до которой дочитал пользователь <ключ>
+    vector<int> user_page_counts_;
+    // Количество пользователей, дочитавших (как минимум) до страницы <индекс>
+    vector<int> page_achieved_by_count_;
 
-//  int GetUserCount() const {
-//      // Возвращает общее количество пользователей, для которых произошло событие Read
-//    return sorted_users_.size();
-//  }
-//  void AddUser(int user_id) {
-//    sorted_users_.push_back(user_id);
-//    user_positions_[user_id] = sorted_users_.size() - 1;
-//  }
-//  void SwapUsers(int lhs_position, int rhs_position) {
-//    const int lhs_id = sorted_users_[lhs_position];
-//    const int rhs_id = sorted_users_[rhs_position];
-//    swap(sorted_users_[lhs_position], sorted_users_[rhs_position]);
-//    swap(user_positions_[lhs_id], user_positions_[rhs_id]);
-//  }
+    int GetUserCount() const {
+      return page_achieved_by_count_[0];
+    }
+
+    // lhs включительно, rhs не включительно
+    void UpdatePageRange(int lhs, int rhs) {
+      for (int i = lhs; i < rhs; ++i) {
+        ++page_achieved_by_count_[i];
+      }
+    }
 };
 
-
-int main1(){
+int main(){
   // Для ускорения чтения данных отключается синхронизация
   // cin и cout с stdio,
   // а также выполняется отвязка cin от cout
   ios::sync_with_stdio(false);
   cin.tie(nullptr);
-  //ifstream is("inputReadAndCheer.txt");
-  ifstream is("input_task_4.txt");
+  ifstream is("inputReadAndCheer.txt");
+  //ifstream is("input_task_4.txt");
   ofstream os("output_task_4.txt");
 
   ReadingManager manager;
@@ -131,7 +98,7 @@ int main1(){
   return 0;
 }
 
-int main(){
+int main1(){
     // Для ускорения чтения данных отключается синхронизация
     // cin и cout с stdio,
     // а также выполняется отвязка cin от cout
