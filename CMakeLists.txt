@@ -29,6 +29,7 @@ set(Week_2
         task_2_learner
         task_3_expresses
         task_4_ebook
+        task_5_booking
         utility
 )
 

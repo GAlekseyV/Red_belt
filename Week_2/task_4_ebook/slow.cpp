@@ -89,7 +89,7 @@ int main(){
       int page_count;
       is >> page_count;
       manager.Read(user_id, page_count);
-      //cout << "Query: " << query_id << endl;
+      //cout << "Request: " << query_id << endl;
     } else if (query_type == "CHEER") {
       os << setprecision(6) << manager.Cheer(user_id) << "\n";
     }
