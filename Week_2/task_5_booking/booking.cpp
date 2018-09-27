@@ -7,6 +7,7 @@
 #include "test_runner.h"
 
 #include <cstdlib>
+#include <deque>
 #include <iostream>
 #include <fstream>
 #include <limits>
@@ -16,61 +17,69 @@
 
 using namespace std;
 
-struct Request{
-    string type;
-    int64_t time;
-    string hotel_name;
-    int client_id;
-    int room_count;
-};
-
-
 class BookingManager{
+    struct Book_{
+        int64_t time;
+        string hotel_name;
+        int client_id;
+        int room_count;
+    };
+    deque<Book_> books;
 public:
-    BookingManager()
-    : last_booking_time(numeric_limits<int64_t>::min())
-    {}
-    void Book(const int64_t& time, const string& hotel_name, const int client_id, const int room_count){
+    void Book(const int64_t& time, const string& hotel_name, int client_id, int room_count){
         // Забронировать номер в отеле
-        time_to_clients[hotel_name][time].insert(client_id);
-        time_to_rooms[hotel_name][time] += room_count;
-        if(time > last_booking_time){
-            last_booking_time = time;
+        Book_ newBook {time, hotel_name, client_id, room_count};
+        books.push_back(newBook);
+        AddRooms(newBook);
+        AddClient(newBook);
+
+        while(books.front().time <= books.back().time - seconds_in_day){
+            SubRooms(books.front());
+            SubClients(books.front());
+            books.pop_front();
         }
     }
 
     int Clients(const string& hotel_name) const{
         // Количество клиентов бронировавших номера
-        if(time_to_clients.count(hotel_name) != 0){
-            auto first_book_it = time_to_clients.at(hotel_name).upper_bound(last_booking_time - seconds_in_day);
-            set<int> total_clients;
-            for(auto it = first_book_it; it != time_to_clients.at(hotel_name).end(); ++it){
-                total_clients.insert(it->second.begin(), it->second.end());
-            }
-            return total_clients.size();
+        if(clients.count(hotel_name) != 0){
+            return clients.at(hotel_name).size();
         }
         return 0;
     }
 
     int Rooms(const string& hotel_name) const{
         // Возвращает количество номеров забронированных за сутки
-        if(time_to_rooms.count(hotel_name) != 0){
-            auto first_book_it = time_to_rooms.at(hotel_name).upper_bound(last_booking_time - seconds_in_day);
-            int total_rooms_booked = 0;
-            for(auto it = first_book_it; it != time_to_rooms.at(hotel_name).end(); ++it){
-                total_rooms_booked += it->second;
-            }
-            return total_rooms_booked;
+        if(rooms.count(hotel_name) != 0){
+            return rooms.at(hotel_name);
         }
         return 0;
     }
 
 private:
     static const int64_t seconds_in_day = 86400;
-    int64_t last_booking_time;
 
-    map<string, map<int64_t , set<int>>> time_to_clients;
-    map<string, map<int64_t , int>> time_to_rooms;
+    void SubRooms(const Book_& book){
+        rooms[book.hotel_name] -= book.room_count;
+    }
+
+    void AddRooms(const Book_& book){
+        rooms[book.hotel_name] += book.room_count;
+    }
+
+    void AddClient(const Book_& book){
+        clients[book.hotel_name][book.client_id] += 1;
+    }
+
+    void SubClients(const Book_& book){
+        clients[book.hotel_name][book.client_id] -= 1;
+        if(clients[book.hotel_name][book.client_id] == 0){
+            clients[book.hotel_name].erase(book.client_id);
+        }
+    }
+
+    map<string, int> rooms;
+    map<string, map<int, int>> clients;
 };
 
 void TestCase1();
@@ -97,22 +106,26 @@ int main1(){
 
     int query_count;
     is >> query_count;
-    Request request;
     LOG_DURATION("All time")
     for (int query_id = 0; query_id < query_count; ++query_id) {
-        is >> request.type;
-        if (request.type == "BOOK") {
-            is >> request.time >> request.hotel_name >> request.client_id >> request.room_count;
-            manager.Book(request.time, request.hotel_name, request.client_id, request.room_count);
-        } else if (request.type == "CLIENTS") {
-            is >> request.hotel_name;
-            os << manager.Clients(request.hotel_name) << "\n";
-        }else if(request.type == "ROOMS"){
-            is >> request.hotel_name;
-            os << manager.Rooms(request.hotel_name) << "\n";
+        string type;
+        is >> type;
+        if (type == "BOOK") {
+            int64_t time;
+            string hotel_name;
+            int client_id, room_count;
+            is >> time >> hotel_name >> client_id >> room_count;
+            manager.Book(time, hotel_name, client_id, room_count);
+        } else if (type == "CLIENTS") {
+            string hotel_name;
+            is >> hotel_name;
+            os << manager.Clients(hotel_name) << "\n";
+        }else if(type == "ROOMS"){
+            string hotel_name;
+            is >> hotel_name;
+            os << manager.Rooms(hotel_name) << "\n";
         }
     }
-
     return 0;
 }
 
@@ -127,19 +140,21 @@ int main(){
 
     int query_count;
     cin >> query_count;
-    Request request;
     LOG_DURATION("All time")
     for (int query_id = 0; query_id < query_count; ++query_id) {
-        cin >> request.type;
-        if (request.type == "BOOK") {
-            cin >> request.time >> request.hotel_name >> request.client_id >> request.room_count;
-            manager.Book(request.time, request.hotel_name, request.client_id, request.room_count);
-        } else if (request.type == "CLIENTS") {
-            cin >> request.hotel_name;
-            cout << manager.Clients(request.hotel_name) << "\n";
-        }else if(request.type == "ROOMS"){
-            cin >> request.hotel_name;
-            cout << manager.Rooms(request.hotel_name) << "\n";
+        string type, hotel_name;
+        cin >> type;
+        if (type == "BOOK") {
+            int64_t time;
+            int client_id, room_count;
+            cin >> time >> hotel_name >> client_id >> room_count;
+            manager.Book(time, hotel_name, client_id, room_count);
+        } else if (type == "CLIENTS") {
+            cin >> hotel_name;
+            cout << manager.Clients(hotel_name) << '\n';
+        }else if(type == "ROOMS"){
+            cin >> hotel_name;
+            cout << manager.Rooms(hotel_name) << '\n';
         }
     }
 
