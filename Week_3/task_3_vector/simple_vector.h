@@ -11,9 +11,8 @@ public:
   : start_(nullptr), size_(0), capacity_(0)
   {}
 
-  explicit SimpleVector(size_t size): size_(size){
-    start_ = new T[size_];
-    capacity_ = size_;
+  explicit SimpleVector(size_t size)
+  : start_(new T[size]), size_(size), capacity_(size){
   }
 
   ~SimpleVector(){
@@ -35,29 +34,19 @@ public:
   size_t Capacity() const {return capacity_;}
 
   void PushBack(const T& value){
-      if(start_ == nullptr){
-          start_ = new T[1];
-          *start_ = value;
-          size_++;
-          capacity_++;
-          return;
-      }
-      if(size_ == capacity_){
-          Resize();
-      }
-      size_++;
-      start_[size_ - 1] = value;
+    if(size_ >= capacity_){
+        auto new_cap = capacity_ == 0 ? 1 : 2 * capacity_;
+        auto new_start_ = new T[new_cap];
+        std::copy(begin(), end(), new_start_);
+        delete[] start_;
+        start_ = new_start_;
+        capacity_ = new_cap;
+    }
+    start_[size_++] = value;
   }
 
 private:
   // Добавьте поля для хранения данных вектора
-  void Resize(){
-      capacity_ = 2*capacity_;
-      T* new_start = new T[capacity_];
-      std::copy(start_, start_ + size_, new_start);
-      delete[] start_;
-      start_ = new_start;
-  }
 
   T* start_;
   size_t size_;
