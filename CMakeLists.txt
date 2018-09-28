@@ -41,6 +41,7 @@ set(Week_3
         )
 
 set(Week_4
+        stringSet
         )
 
 set(Week_5
