@@ -34,6 +34,7 @@ set(Week_2
 )
 
 set(Week_3
+        task_1_objectPool
         )
 
 set(Week_4
