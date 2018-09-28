@@ -37,6 +37,7 @@ set(Week_3
         task_1_objectPool
         task_2_SortSwapCope
         task_3_vector
+        task_4_list
         )
 
 set(Week_4
