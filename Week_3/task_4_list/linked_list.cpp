@@ -18,8 +18,7 @@ public:
   }
 
   void PushFront(const T& value){
-    Node* new_node = new Node;
-    new_node->value = value;
+    Node* new_node = new Node{value};
     new_node->next = head;
     head = new_node;
   }
@@ -29,9 +28,8 @@ public:
       PushFront(value);
       return;
     }
-    Node* new_node = new Node;
+    Node* new_node = new Node{value};
     new_node->next = node->next;
-    new_node->value = value;
     node->next = new_node;
   }
 
@@ -40,22 +38,19 @@ public:
       PopFront();
       return;
     }
-    if(node->next == nullptr){
-      return;
+    if(node->next){
+      Node* deleted_node = node->next;
+      node->next = deleted_node->next;
+      delete deleted_node;
     }
-    Node* deleted_node = node->next;
-    node->next = deleted_node->next;
-    delete deleted_node;
   }
 
   void PopFront(){
-    if(head == nullptr){
-      return;
+    if(head){
+      Node* new_head = head->next;
+      delete head;
+      head = new_head;
     }
-    Node* new_head;
-    new_head = head->next;
-    delete head;
-    head = new_head;
   }
 
   Node* GetHead() { return head; }
