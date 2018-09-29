@@ -14,23 +14,19 @@
 using namespace std;
 
 
-int main1(){
+int main(){
     ifstream is("inputTask1.txt");
     ofstream os("outW4T1list.txt");
 
-    int n, cur_n, prev_n;
+    int n, cur_n, next_n;
     list<int> q_l;
-    map<int, list<int>::iterator> value_to_it;
     {
         LOG_DURATION("Input and insert to list")
         is >> n;
+        vector<list<int>::iterator> pos(n, q_l.end());
         for(int i = 0; i < n; ++i){
-            is >> cur_n >> prev_n;
-            if(value_to_it.count(prev_n) > 0){
-                value_to_it[cur_n] = q_l.insert(value_to_it[prev_n], cur_n);
-            }else{
-                value_to_it[cur_n] = q_l.insert(q_l.end(), cur_n);
-            }
+            is >> cur_n >> next_n;
+            pos[cur_n] = q_l.insert(pos[next_n], cur_n);
         }
     }
 
@@ -48,11 +44,11 @@ int main1(){
         LOG_DURATION("Input and insert to vector")
         isv >> n;
         vector<int> q_v;
-        isv >> cur_n >> prev_n;
+        isv >> cur_n >> next_n;
         q_v.push_back(cur_n);
         for(int i = 1; i < n; ++i){
-            isv >> cur_n >> prev_n;
-            auto prev_it = find(q_v.begin(), q_v.end(), prev_n);
+            isv >> cur_n >> next_n;
+            auto prev_it = find(q_v.begin(), q_v.end(), next_n);
             q_v.insert(prev_it, cur_n);
         }
 
@@ -67,21 +63,17 @@ int main1(){
     return 0;
 }
 
-int main(){
+int main1(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int n, cur_n, prev_n;
+    int n, cur_n, next_n;
     cin >> n;
     list<int> q_l;
-    map<int, list<int>::iterator> value_to_it;
+    vector<list<int>::iterator> pos(n, q_l.end());
     for(int i = 0; i < n; ++i){
-        cin >> cur_n >> prev_n;
-        if(value_to_it.count(prev_n) > 0){
-            value_to_it[cur_n] = q_l.insert(value_to_it[prev_n], cur_n);
-        }else{
-            value_to_it[cur_n] = q_l.insert(q_l.end(), cur_n);
-        }
+        cin >> cur_n >> next_n;
+        pos[cur_n] = q_l.insert(pos[next_n], cur_n);
     }
 
     for(auto item : q_l){
