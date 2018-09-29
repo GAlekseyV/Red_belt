@@ -72,7 +72,7 @@ void StackVector<T, N>::PushBack(const T &value) {
     if(size_ == N){
         throw overflow_error("Out of range");
     }
-    data[++size_ - 1] = value;
+    data[size_++] = value;
 }
 
 template <typename T, size_t N>
@@ -80,7 +80,8 @@ T StackVector<T, N>::PopBack() {
     if(size_ == 0){
         throw underflow_error("Out of range");
     }
-    return data[--size_];
+    --size_;
+    return data[size_];
 }
 
 template <typename T, size_t N>
