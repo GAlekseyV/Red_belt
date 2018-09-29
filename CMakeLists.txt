@@ -44,6 +44,7 @@ set(Week_4
         stringSet
         task_1_sportsmen
         task_2_stackVector
+        task_3_translator
         utility
         )
 
