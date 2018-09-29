@@ -3,6 +3,10 @@ project(Red_belt)
 
 set(CMAKE_CXX_STANDARD 17)
 
+MESSAGE(STATUS "Compiler flags:" ${CMAKE_CXX_COMPILE_FLAGS})
+MESSAGE(STATUS "Compiler cxx debug flags:" ${CMAKE_CXX_FLAGS_DEBUG})
+MESSAGE(STATUS "Compiler cxx debug flags:" ${CMAKE_CXX_FLAGS_RELEASE})
+
 set(WEEKS
     Week_1
     Week_2
@@ -45,6 +49,7 @@ set(Week_4
         task_1_sportsmen
         task_2_stackVector
         task_3_translator
+        task_4_airportCounter
         utility
         )
 
