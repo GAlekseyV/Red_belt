@@ -1,23 +1,40 @@
 #include "test_runner.h"
 
+#include <array>
 #include <cstdint>
 #include <iterator>
 #include <numeric>
 #include <vector>
+#include <utility>
 
 using namespace std;
 
 template <typename RandomIt>
 void MakeJosephusPermutation(RandomIt first, RandomIt last, uint32_t step_size) {
-  vector<typename RandomIt::value_type> pool(first, last);
+  // Вектор итераторов. Каждый итератор указывает на воина
+  vector<typename RandomIt::value_type> pool;
+  move(first, last, back_inserter(pool));
+  vector<bool> alive(pool.size(), true);
+  size_t count_alive = alive.size();
   size_t cur_pos = 0;
-  while (!pool.empty()) {
-    *(first++) = pool[cur_pos];
-    pool.erase(pool.begin() + cur_pos);
-    if (pool.empty()) {
+  // Пока есть живые
+  while (true) {
+    // По данному итератору размещаем текущего убиваемого воина
+    *(first++) = move(pool[cur_pos]);
+    // Удаляем итератор на убитого воина
+    alive[cur_pos] = false;
+    count_alive--;
+    if (count_alive == 0) {
       break;
     }
-    cur_pos = (cur_pos + step_size - 1) % pool.size();
+    // Вычисляем следующую жертву
+    size_t step_count = step_size;
+    while(step_count > 0){
+      cur_pos = ++cur_pos % pool.size();
+      if(alive[cur_pos]){
+        step_count--;
+      }
+    }
   }
 }
 
