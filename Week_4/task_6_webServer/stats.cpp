@@ -4,55 +4,48 @@
 
 #include "stats.h"
 
-Stats::Stats()
-: methodNames({"GET", "POST", "DELETE", "PUT", "UNKNOWN"})
-, uriNames({"/", "/order", "/product", "/basket", "/help", "unknown"})
-{
-    for(auto& method : methodNames){
-        methodStats[method] = 0;
-    }
-    for(auto& uri : uriNames){
-        uriStats[uri] = 0;
-    }
-}
-
 void Stats::AddMethod(string_view method) {
-    if(methodStats.count(method) > 0){
-        ++methodStats[method];
-    }else{
-        ++methodStats[methodNames.back()];
-    }
+    methods.Add(method);
 }
 
 void Stats::AddUri(string_view uri) {
-    if(uriStats.count(uri) > 0){
-        ++uriStats[uri];
-    }else{
-        ++uriStats[uriNames.back()];
-    }
+    uris.Add(uri);
 }
 
 const map<string_view, int>& Stats::GetMethodStats() const {
-    return methodStats;
+    return methods.GetValues();
 }
 
 const map<string_view, int>& Stats::GetUriStats() const {
-    return uriStats;
+    return uris.GetValues();
 }
 
-HttpRequest ParseRequest(string_view line){
-    HttpRequest parseRequest;
-    size_t pos = 0;
-    while(line[pos] == ' '){
-        pos++;
+void LeftStrip(string_view& sv){
+    while(!sv.empty() && isspace(sv[0])){
+        sv.remove_prefix(1);
     }
-    size_t space = line.find(' ', pos);
-    parseRequest.method = line.substr(pos, space - pos);
-    pos = space + 1;
-    space = line.find(' ', pos);
-    parseRequest.uri = line.substr(pos, space - pos);
-    pos = space + 1;
-    parseRequest.protocol = line.substr(pos);
+}
 
-    return parseRequest;
+string_view ReadToken(string_view& sv){
+    LeftStrip(sv);
+
+    auto pos = sv.find(' ');
+    auto result = sv.substr(0, pos);
+    sv.remove_prefix(pos != sv.npos ? pos : sv.size());
+    return result;
+}
+
+
+HttpRequest ParseRequest(string_view line){
+    auto method = ReadToken(line);
+    auto uri = ReadToken(line);
+    return {method, uri, ReadToken(line)};
+}
+
+void StatPiece::Add(string_view value) {
+    if(auto it = counts.find(value); it != counts.end()){
+        ++it->second;
+    } else{
+        ++counts[default_key];
+    }
 }
