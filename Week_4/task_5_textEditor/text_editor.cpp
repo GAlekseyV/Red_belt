@@ -11,54 +11,58 @@ class Editor {
  public:
   // Реализуйте конструктор по умолчанию и объявленные методы
   Editor()
-  : text(list<char>(0))
-  , buffer(list<char>(0))
-  , cursor(text.begin())
+  : pos(text.end())
   {
   }
 
   void Left(){
-    if(cursor != text.begin() && !text.empty()){
-      --cursor;
-    }
+    pos = Advance(pos, -1);
   }
 
   void Right(){
-    if(cursor != text.end() && !text.empty()){
-      ++cursor;
-    }
+    pos = Advance(pos, 1);
   }
 
   void Insert(char token){
-      text.insert(cursor, token);
+      text.insert(pos, token);
   }
 
   void Cut(size_t tokens = 1){
-    Copy(tokens);
-    while(tokens-- > 0 && cursor != text.end())
-    {
-      cursor = text.erase(cursor);
-    }
+    auto pos2 = Advance(pos, tokens);
+    buffer.assign(pos, pos2);
+    pos = text.erase(pos, pos2);
   }
 
   void Copy(size_t tokens = 1){
-    buffer.clear();
-    // TODO Исключить возможность копировать больше символов, чем есть в text
-    buffer.insert(buffer.begin(), cursor, next(cursor, tokens));
+    auto pos2 = Advance(pos, tokens);
+    buffer.assign(pos, pos2);
   }
 
   void Paste(){
-    text.insert(cursor, buffer.begin(), buffer.end());
+    text.insert(pos, buffer.begin(), buffer.end());
   }
 
   string GetText() const{
-    return string(text.begin(), text.end());
+    return {text.begin(), text.end()};
   }
 
 private:
+  using Iterator = list<char>::iterator;
   list<char> text;
   list<char> buffer;
-  list<char>::iterator cursor;
+  Iterator pos;
+
+  Iterator Advance(Iterator it, int steps){
+    while(steps > 0 && it != text.end()){
+      ++it;
+      --steps;
+    }
+    while (steps < 0 && it != text.begin()){
+      --it;
+      ++steps;
+    }
+    return it;
+  }
 };
 
 
@@ -152,7 +156,7 @@ void TestEmptyBuffer() {
   ASSERT_EQUAL(editor.GetText(), "example");
 }
 
-int main1() {
+int main() {
   TestRunner tr;
   RUN_TEST(tr, TestEditing);
   RUN_TEST(tr, TestReverse);
@@ -161,7 +165,7 @@ int main1() {
   return 0;
 }
 
-int main() {
+int main1() {
   Editor editor;
   const string text = "hello, world";
   for (char c : text) {
