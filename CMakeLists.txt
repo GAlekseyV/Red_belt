@@ -56,6 +56,7 @@ set(Week_4
         )
 
 set(Week_5
+        task_1_josephus
         )
 
 set(Week_6
