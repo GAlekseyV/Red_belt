@@ -10,6 +10,12 @@
 
 using namespace std;
 
+// Вспомогательная функция, позволяющая "зациклить" список
+template <typename Container, typename ForwardIt>
+ForwardIt LoopIterator(Container& container, ForwardIt pos){
+    return pos == container.end() ? container.begin() : pos;
+}
+
 template <typename RandomIt>
 void MakeJosephusPermutation(RandomIt first, RandomIt last, uint32_t step_size) {
     // Вектор итераторов. Каждый итератор указывает на воина
@@ -18,17 +24,14 @@ void MakeJosephusPermutation(RandomIt first, RandomIt last, uint32_t step_size) 
     auto cur = pool.begin();
     while (!pool.empty()) {
         *(first++) = move(*cur);
-        cur = pool.erase(cur);
-        if(cur == pool.end()){
-            cur = pool.begin();
+        if(pool.size() == 1){
+            break;
         }
-        for(int i = 0; i < step_size-1; ++i){
-            if(pool.size() != 1){
-                cur = next(cur);
-            }
-            if(cur == pool.end()){
-                cur = pool.begin();
-            }
+        const auto next_pos = LoopIterator(pool, next(cur));
+        pool.erase(cur);
+        cur = next_pos;
+        for(uint32_t step_index = 1; step_index < step_size; ++step_index){
+            cur = LoopIterator(pool, next(cur));
         }
     }
 }
