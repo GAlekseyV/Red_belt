@@ -50,6 +50,7 @@ set(Week_4
         task_2_stackVector
         task_3_translator
         task_4_airportCounter
+        task_5_textEditor
         utility
         )
 

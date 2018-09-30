@@ -15,57 +15,59 @@ class AirportCounter {
 public:
   // конструктор по умолчанию: список элементов пока пуст
   AirportCounter(){
-    stat.fill(0);
+    data.fill(0);
   }
 
   // конструктор от диапазона элементов типа TAirport
   template <typename TIterator>
-  AirportCounter(TIterator begin, TIterator end){
-    stat.fill(0);
-    for(auto it = begin; it != end; ++it) {
-      ++stat[static_cast<uint32_t>(*it)];
+  AirportCounter(TIterator begin, TIterator end)
+  : AirportCounter(){
+    for(; begin != end; ++begin) {
+      Insert(*begin);
     }
   }
 
   // получить количество элементов, равных данному
   size_t Get(TAirport airport) const{
-    return stat[static_cast<uint32_t>(airport)];
+    return data[static_cast<size_t>(airport)];
   }
 
   // добавить данный элемент
   void Insert(TAirport airport){
-    ++stat[static_cast<uint32_t>(airport)];
+    ++GetRef(airport);
   }
 
   // удалить одно вхождение данного элемента
   void EraseOne(TAirport airport){
-    --stat[static_cast<uint32_t>(airport)];
+    --GetRef(airport);
   }
 
   // удалить все вхождения данного элемента
   void EraseAll(TAirport airport){
-    stat[static_cast<uint32_t>(airport)] = 0;
+    GetRef(airport) = 0;
   }
 
+  static const uint32_t SIZE = static_cast<uint32_t>(TAirport::Last_);
   using Item = pair<TAirport, size_t>;
-  using Items = array<Item, static_cast<uint32_t>(TAirport::Last_)>;
+  using Items = array<Item, SIZE>;
 
   // получить некоторый объект, по которому можно проитерироваться,
   // получив набор объектов типа Item - пар (аэропорт, количество),
   // упорядоченных по аэропорту
   Items GetItems() const{
-    array<Item, static_cast<uint32_t>(TAirport::Last_)> res;
-      for(uint32_t i = 0; i < N; ++i){
-          res[i].first = static_cast<TAirport>(i);
-          res[i].second = stat[i];
+    Items items;
+      for(size_t airport_idx = 0; airport_idx < SIZE; ++airport_idx){
+          items[airport_idx] = {static_cast<TAirport>(airport_idx),
+                                data[airport_idx]};
       }
-    return res;
+    return items;
   }
 
 private:
-  // ???
-  array<uint32_t , static_cast<uint32_t>(TAirport::Last_)> stat;
-  static const uint32_t N = static_cast<uint32_t>(TAirport::Last_);
+  array<size_t , SIZE> data;
+  size_t& GetRef(TAirport airport){
+      return data[static_cast<size_t>(airport)];
+  }
 };
 
 void TestMoscow() {
