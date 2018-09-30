@@ -51,6 +51,7 @@ set(Week_4
         task_3_translator
         task_4_airportCounter
         task_5_textEditor
+        task_6_webServer
         utility
         )
 
