@@ -6,36 +6,31 @@
 #include <numeric>
 #include <vector>
 #include <utility>
+#include <list>
 
 using namespace std;
 
 template <typename RandomIt>
 void MakeJosephusPermutation(RandomIt first, RandomIt last, uint32_t step_size) {
-  // Вектор итераторов. Каждый итератор указывает на воина
-  vector<typename RandomIt::value_type> pool;
-  move(first, last, back_inserter(pool));
-  vector<bool> alive(pool.size(), true);
-  size_t count_alive = alive.size();
-  size_t cur_pos = 0;
-  // Пока есть живые
-  while (true) {
-    // По данному итератору размещаем текущего убиваемого воина
-    *(first++) = move(pool[cur_pos]);
-    // Удаляем итератор на убитого воина
-    alive[cur_pos] = false;
-    count_alive--;
-    if (count_alive == 0) {
-      break;
+    // Вектор итераторов. Каждый итератор указывает на воина
+    list<typename RandomIt::value_type> pool;
+    move(first, last, back_inserter(pool));
+    auto cur = pool.begin();
+    while (!pool.empty()) {
+        *(first++) = move(*cur);
+        cur = pool.erase(cur);
+        if(cur == pool.end()){
+            cur = pool.begin();
+        }
+        for(int i = 0; i < step_size-1; ++i){
+            if(pool.size() != 1){
+                cur = next(cur);
+            }
+            if(cur == pool.end()){
+                cur = pool.begin();
+            }
+        }
     }
-    // Вычисляем следующую жертву
-    size_t step_count = step_size;
-    while(step_count > 0){
-      cur_pos = ++cur_pos % pool.size();
-      if(alive[cur_pos]){
-        step_count--;
-      }
-    }
-  }
 }
 
 vector<int> MakeTestVector() {
@@ -55,6 +50,11 @@ void TestIntVector() {
     vector<int> numbers_copy = numbers;
     MakeJosephusPermutation(begin(numbers_copy), end(numbers_copy), 3);
     ASSERT_EQUAL(numbers_copy, vector<int>({0, 3, 6, 9, 4, 8, 5, 2, 7, 1}));
+  }
+  {
+    vector<int> numbers_copy = numbers;
+    MakeJosephusPermutation(begin(numbers_copy), end(numbers_copy), 2);
+    ASSERT_EQUAL(numbers_copy, vector<int>({0, 2, 4, 6, 8, 1, 5, 9, 7, 3}));
   }
 }
 
