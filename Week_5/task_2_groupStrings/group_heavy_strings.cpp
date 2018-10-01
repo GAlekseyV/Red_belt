@@ -22,48 +22,30 @@ using Group = vector<String>;
 template <typename String>
 using Char = typename String::value_type;
 
-//
 template <typename String>
-class GroupChar{
-public:
-    explicit GroupChar(const String& string){
-        for(auto& c : string){
-            group.insert(c);
-        }
-    }
-    bool isStrInGroup(const String& str){
-        return group == GroupChar(str).group;
-    }
-private:
-    set<typename String::value_type> group;
-};
+using Key = String;
+
+
+template <typename String>
+Key<String> ComputeStringKey(const String& string) {
+    String chars = string;
+    sort(begin(chars), end(chars));
+    chars.erase(unique(begin(chars), end(chars)), end(chars));
+    return chars;
+}
+
 
 template <typename String>
 vector<Group<String>> GroupHeavyStrings(vector<String> strings) {
-  // Напишите реализацию функции,
-  // использовав не более 1 копирования каждого символа
-  list<String> strings_list;
-  move(strings.begin(), strings.end(), back_inserter(strings_list));
-  vector<vector<String>> result;
-  //vector<String> words;
-
-  while(!strings_list.empty())
-  {
-      GroupChar cur_group = GroupChar(strings_list.front());
-      result.resize(result.size() + 1);
-      for(auto it = strings_list.begin(); it != strings_list.end();){
-          if(cur_group.isStrInGroup(*it)){
-              result[result.size() - 1].push_back(move(*it));
-              //words.push_back(move(*it));
-              it = strings_list.erase(it);
-          }else{
-              it++;
-          }
-      }
-      //result.push_back(move(words));
-  }
-
-  return result;
+    map<Key<String>, Group<String>> groups_map;
+    for (String& string : strings) {
+        groups_map[ComputeStringKey(string)].push_back(move(string));
+    }
+    vector<Group<String>> groups;
+    for (auto& [key, group] : groups_map) {
+        groups.push_back(move(group));
+    }
+    return groups;
 }
 
 
