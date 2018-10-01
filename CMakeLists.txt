@@ -60,6 +60,7 @@ set(Week_5
         task_2_groupStrings
         task_3_simpleVector
         task_4_splitIntoSentences
+        task_5_simpleVector2
         )
 
 set(Week_6
