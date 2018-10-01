@@ -7,9 +7,7 @@
 template <typename T>
 class SimpleVector {
 public:
-  SimpleVector()
-  : start_(nullptr), size_(0), capacity_(0)
-  {}
+  SimpleVector() = default;
 
   explicit SimpleVector(size_t size)
   : start_(new T[size]), size_(size), capacity_(size){
@@ -17,21 +15,31 @@ public:
 
   SimpleVector(const SimpleVector& other)
   : start_(new T[other.capacity_]), size_(other.size_), capacity_(other.capacity_){
-      copy(other.begin(), other.end(), begin());
+      std::copy(other.begin(), other.end(), begin());
   }
 
   ~SimpleVector(){
       delete[] start_;
   }
 
-  SimpleVector& operator=(const SimpleVector& other){
-      size_ = other.size_;
-      capacity_ = other.capacity_;
-
-      delete[] start_;
-      start_ = new T[capacity_];
-      std::copy(other.begin(), other.end(), begin());
-      return *this;
+  SimpleVector& operator=(const SimpleVector& rhs){
+      if(rhs.capacity_ <= capacity_){
+          std::copy(rhs.begin(), rhs.end(), begin());
+          size_ = rhs.size_;
+      }else{
+          // Это так называемая идиома copy-and-swap.
+          // Мы создаём временный вектор с помощью
+          // конструктора копирования, а затем обмениваем его поля со своими.
+          // Так мы достигаем двух целей:
+          //  - избегаем дублирования кода в конструкторе копирования
+          //    и операторе присваивания
+          //  - обеспечиваем согласованное поведение конструктора копирования
+          //    и оператора присваивания
+          SimpleVector<T> tmp(rhs);
+          std::swap(tmp.start_, start_);
+          std::swap(tmp.size_, size_);
+          std::swap(tmp.capacity_, capacity_);
+      }
   }
 
   T& operator[](size_t index){
@@ -61,9 +69,8 @@ public:
   }
 
 private:
-  // Добавьте поля для хранения данных вектора
-
-  T* start_;
-  size_t size_;
-  size_t capacity_;
+  // Поля для хранения данных вектора
+  T* start_ = nullptr;
+  size_t size_ = 0;
+  size_t capacity_ = 0;
 };
