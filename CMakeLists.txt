@@ -58,6 +58,7 @@ set(Week_4
 set(Week_5
         task_1_josephus
         task_2_groupStrings
+        task_3_simpleVector
         )
 
 set(Week_6
