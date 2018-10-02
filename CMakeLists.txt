@@ -62,6 +62,8 @@ set(Week_5
         task_4_splitIntoSentences
         task_5_simpleVector2
         task_6_mergeSort3
+
+        task_8_matrix_sum
         samples
         )
 
