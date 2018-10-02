@@ -64,6 +64,7 @@ set(Week_5
         task_6_mergeSort3
 
         task_8_matrix_sum
+        Account
         samples
         )
 
