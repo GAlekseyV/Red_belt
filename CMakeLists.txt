@@ -64,6 +64,8 @@ set(Week_5
         task_6_mergeSort3
 
         task_8_matrix_sum
+        task_9_blog
+        task_10_synchronized
         Account
         samples
         )
