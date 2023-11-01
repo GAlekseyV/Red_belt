@@ -17,6 +17,7 @@ set(WEEKS
 )
 
 set(Week_1
+        task_0_max_element_if
         task_1_log
         task_2_comps
         task_3_update_field
@@ -82,5 +83,6 @@ foreach(WEEK ${WEEKS})
                 )
         set(NAME "${WEEK}_${TASK}")
         add_executable(${NAME} ${SOURCE})
+        target_include_directories(${NAME} PRIVATE "test_framework/")
     endforeach(TASK)
 endforeach(WEEK)
