@@ -10,3 +10,5 @@
 4. [Макрос UPDATE_FIELD](/Week_1/task_3_update_field/task.md)
 5. [Плохой макрос](/Week_1/task_4_bad_macros/task.md)
 6. [Макрос UNIQ_ID](/Week_1/task_5_uniq_id/task.md)
+7. [Таблица](/Week_1/task_6_table/task.md)
+8. [Дек на основе двух векторов](/Week_1/task_7_deque/task.md)
