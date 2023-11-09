@@ -48,21 +48,19 @@ public:
   {
     if (index < head.size()) {
       return head[head.size() - index - 1];
-    } else {
-      return tail[index - head.size()];
     }
+    return tail[index - head.size()];
   }
 
   const T &operator[](size_t index) const
   {
     if (index < head.size()) {
       return head[head.size() - index - 1];
-    } else {
-      return tail[index - head.size()];
     }
+    return tail[index - head.size()];
   }
 
-  bool Empty() const
+  [[nodiscard]] bool Empty() const
   {
     return head.empty() && tail.empty();
   }
@@ -82,15 +80,15 @@ public:
     head.push_back(item);
   }
 
-  size_t Size() const
+  [[nodiscard]] size_t Size() const
   {
     return head.size() + tail.size();
   }
 
 private:
-  void CheckIndex(size_t i)
+  void CheckIndex(size_t idx)
   {
-    if (i >= Size()) {
+    if (idx >= Size()) {
       throw out_of_range("Index is out of range");
     }
   }
