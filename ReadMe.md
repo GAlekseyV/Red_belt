@@ -12,3 +12,4 @@
 6. [Макрос UNIQ_ID](/Week_1/task_5_uniq_id/task.md)
 7. [Таблица](/Week_1/task_6_table/task.md)
 8. [Дек на основе двух векторов](/Week_1/task_7_deque/task.md)
+9. [Шаблон Paginator](/Week_1/task_8_paginator/task.md)
