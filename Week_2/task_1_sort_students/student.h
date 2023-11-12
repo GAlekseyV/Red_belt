@@ -17,12 +17,12 @@ struct Student
     return GetName() < other.GetName();
   }
 
-  bool Less(const Student &other) const
+  [[nodiscard]] bool Less(const Student &other) const
   {
     return rating > other.rating;
   }
 
-  string GetName() const
+  [[nodiscard]] string GetName() const
   {
     return first_name + " " + last_name;
   }
