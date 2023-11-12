@@ -5,21 +5,25 @@
 
 using namespace std;
 
-struct Student {
+struct Student
+{
   string first_name;
   string last_name;
   map<string, double> marks;
   double rating;
 
-  bool operator < (const Student& other) const {
+  bool operator<(const Student &other) const
+  {
     return GetName() < other.GetName();
   }
 
-  bool Less(const Student& other) const {
+  bool Less(const Student &other) const
+  {
     return rating > other.rating;
   }
 
-  string GetName() const {
+  string GetName() const
+  {
     return first_name + " " + last_name;
   }
 };

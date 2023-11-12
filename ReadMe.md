@@ -13,3 +13,7 @@
 7. [Таблица](/Week_1/task_6_table/task.md)
 8. [Дек на основе двух векторов](/Week_1/task_7_deque/task.md)
 9. [Шаблон Paginator](/Week_1/task_8_paginator/task.md)
+
+## Неделя 2. Оптимизация кода, сложность алгоритмов и эффективный ввод/вывод
+
+1. [Сортировка студентов по рейтингу](/Week_2/task_1_sort_students/task.md)
