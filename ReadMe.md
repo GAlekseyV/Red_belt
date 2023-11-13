@@ -18,3 +18,4 @@
 
 1. [Сортировка студентов по рейтингу](/Week_2/task_1_sort_students/task.md)
 2. [Изучение нового языка](/Week_2/task_2_learner/task.md)
+3. [Экспрессы](/Week_2/task_3_expresses/task.md)
