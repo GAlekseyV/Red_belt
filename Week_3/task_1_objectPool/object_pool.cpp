@@ -1,61 +1,64 @@
 #include "test_runner.h"
 
-#include <algorithm>
-#include <iostream>
-#include <string>
 #include <queue>
-#include <stdexcept>
 #include <set>
+#include <stdexcept>
+#include <string>
 
 using namespace std;
 
-template <class T>
-class ObjectPool {
+template<class T>
+class ObjectPool
+{
 public:
-  T* Allocate(){
+  T *Allocate()
+  {
     // Если есть хотя бы один освобожденный объект, перености его
     // во множество выделенных и возвращает указатель.
     // Если освобожденных объектов нет, создает новый объект и помещает
     // его во множество выделенных, возвращает указатель на него
-    if(free.empty()){
+    if (free.empty()) {
       free.push(new T);
     }
-    auto new_object = free.front();
+    auto *new_object = free.front();
     free.pop();
     allocated.insert(new_object);
     return new_object;
   }
 
-  T* TryAllocate(){
+  T *TryAllocate()
+  {
     // Работает аналогично Allocate, если освобожденных объектов нет
     // возвращает nullptr;
-    T* new_object;
-    if(free.empty()){
+    T *new_object = nullptr;
+    if (free.empty()) {
       return nullptr;
     }
     return Allocate();
   }
 
-  void Deallocate(T* object){
+  void Deallocate(T *object)
+  {
     // Переносит объект из множества выделенных в множество освобождённых;
     // если переданный объект не содержится в множестве выделенных, метод Deallocate
     // должен бросать исключение invalid_argument.
-    if(allocated.count(object) != 0){
+    if (allocated.count(object) != 0) {
       free.push(object);
       allocated.erase(object);
-    }else{
+    } else {
       throw invalid_argument("Object is not find");
     }
   }
 
 
-  ~ObjectPool(){
-    for(auto x : allocated){
+  ~ObjectPool()
+  {
+    for (auto *x : allocated) {
       delete x;
     }
-    while(!free.empty()){
-      T* deleting_object = free.front();
-      free.pop(); // Delete from queue and call destructor
+    while (!free.empty()) {
+      T *deleting_object = free.front();
+      free.pop();// Delete from queue and call destructor
       delete deleting_object;
     }
   }
@@ -63,34 +66,36 @@ public:
 private:
   // Добавьте сюда поля
   // Два набора объектов: выделенные и освобожденные
-  set<T*> allocated;
-  queue<T*> free;
+  set<T *> allocated;
+  queue<T *> free;
 };
 
-void TestObjectPool() {
+void TestObjectPool()
+{
   ObjectPool<string> pool;
 
-  auto p1 = pool.Allocate();
-  auto p2 = pool.Allocate();
-  auto p3 = pool.Allocate();
+  auto *ptr1 = pool.Allocate();
+  auto *ptr2 = pool.Allocate();
+  auto *ptr3 = pool.Allocate();
 
-  *p1 = "first";
-  *p2 = "second";
-  *p3 = "third";
+  *ptr1 = "first";
+  *ptr2 = "second";
+  *ptr3 = "third";
 
-  pool.Deallocate(p2);
+  pool.Deallocate(ptr2);
   ASSERT_EQUAL(*pool.Allocate(), "second");
 
-  pool.Deallocate(p3);
-  pool.Deallocate(p1);
+  pool.Deallocate(ptr3);
+  pool.Deallocate(ptr1);
   ASSERT_EQUAL(*pool.Allocate(), "third");
   ASSERT_EQUAL(*pool.Allocate(), "first");
 
-  pool.Deallocate(p1);
+  pool.Deallocate(ptr1);
 }
 
-int main() {
-  TestRunner tr;
-  RUN_TEST(tr, TestObjectPool);
+int main()
+{
+  TestRunner trunner;
+  RUN_TEST(trunner, TestObjectPool);
   return 0;
 }

@@ -20,3 +20,7 @@
 2. [Изучение нового языка](/Week_2/task_2_learner/task.md)
 3. [Экспрессы](/Week_2/task_3_expresses/task.md)
 4. [Электронная книга](/Week_2/task_4_ebook/task.md)
+
+## Неделя 3. Модель памяти в С++
+
+1. [Пул объектов](/Week_3/task_1_objectPool/task.md)
