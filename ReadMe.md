@@ -24,3 +24,4 @@
 ## Неделя 3. Модель памяти в С++
 
 1. [Пул объектов](/Week_3/task_1_objectPool/task.md)
+2. [Swap, SortPointers, ReversedCopy](/Week_3/task_2_SortSwapCope/task.md)
