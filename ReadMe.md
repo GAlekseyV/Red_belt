@@ -25,3 +25,4 @@
 
 1. [Пул объектов](/Week_3/task_1_objectPool/task.md)
 2. [Swap, SortPointers, ReversedCopy](/Week_3/task_2_SortSwapCope/task.md)
+3. [Пишем свой вектор](/Week_3/task_3_vector/task.md)
