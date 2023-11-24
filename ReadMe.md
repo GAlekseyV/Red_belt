@@ -27,3 +27,7 @@
 2. [Swap, SortPointers, ReversedCopy](/Week_3/task_2_SortSwapCope/task.md)
 3. [Пишем свой вектор](/Week_3/task_3_vector/task.md)
 4. [Односвязный список](/Week_3/task_4_list/task.md)
+
+## Неделя 4. Эффективное использование линейных контейнеров
+
+1. [Спортсмены](/Week_4/task_1_sportsmen/task.md)
