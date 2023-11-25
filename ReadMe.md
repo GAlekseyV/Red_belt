@@ -31,3 +31,4 @@
 ## Неделя 4. Эффективное использование линейных контейнеров
 
 1. [Спортсмены](/Week_4/task_1_sportsmen/task.md)
+2. [StackVector](/Week_4/task_2_stackVector/task.md)
