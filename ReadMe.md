@@ -34,3 +34,4 @@
 2. [StackVector](/Week_4/task_2_stackVector/task.md)
 3. [Translator](/Week_4/task_3_translator/task.md)
 4. [AirportCounter](/Week_4/task_4_airportCounter/task.md)
+5. [Текстовый редактор](/Week_4/task_5_textEditor/task.md)
