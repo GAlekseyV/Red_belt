@@ -3,7 +3,7 @@
 #include <string_view>
 using namespace std;
 
-struct HttpRequest {
+struct HttpRequest
+{
   string_view method, uri, protocol;
 };
-

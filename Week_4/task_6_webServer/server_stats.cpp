@@ -1,14 +1,18 @@
-#include "test_runner.h"
 #include "http_request.h"
 #include "stats.h"
+#include "test_runner.h"
 
+#include <istream>
 #include <map>
+#include <sstream>
+#include <string>
 #include <string_view>
 using namespace std;
 
-Stats ServeRequests(istream& input) {
+Stats ServeRequests(istream &input)
+{
   Stats result;
-  for (string line; getline(input, line); ) {
+  for (string line; getline(input, line);) {
     const HttpRequest req = ParseRequest(line);
     result.AddUri(req.uri);
     result.AddMethod(req.method);
@@ -16,7 +20,8 @@ Stats ServeRequests(istream& input) {
   return result;
 }
 
-void TestBasic() {
+void TestBasic()
+{
   const string input =
     R"(GET / HTTP/1.1
     POST /order HTTP/1.1
@@ -35,19 +40,19 @@ void TestBasic() {
     HEAD / HTTP/1.1)";
 
   const map<string_view, int> expected_method_count = {
-    {"GET", 8},
-    {"PUT", 1},
-    {"POST", 4},
-    {"DELETE", 1},
-    {"UNKNOWN", 1},
+    { "GET", 8 },
+    { "PUT", 1 },
+    { "POST", 4 },
+    { "DELETE", 1 },
+    { "UNKNOWN", 1 },
   };
   const map<string_view, int> expected_url_count = {
-    {"/", 4},
-    {"/order", 2},
-    {"/product", 5},
-    {"/basket", 1},
-    {"/help", 1},
-    {"unknown", 2},
+    { "/", 4 },
+    { "/order", 2 },
+    { "/product", 5 },
+    { "/basket", 1 },
+    { "/help", 1 },
+    { "unknown", 2 },
   };
 
   istringstream is(input);
@@ -57,24 +62,25 @@ void TestBasic() {
   ASSERT_EQUAL(stats.GetUriStats(), expected_url_count);
 }
 
-void TestAbsentParts() {
+void TestAbsentParts()
+{
   // Методы GetMethodStats и GetUriStats должны возвращать словари
   // с полным набором ключей, даже если какой-то из них не встречался
 
   const map<string_view, int> expected_method_count = {
-    {"GET", 0},
-    {"PUT", 0},
-    {"POST", 0},
-    {"DELETE", 0},
-    {"UNKNOWN", 0},
+    { "GET", 0 },
+    { "PUT", 0 },
+    { "POST", 0 },
+    { "DELETE", 0 },
+    { "UNKNOWN", 0 },
   };
   const map<string_view, int> expected_url_count = {
-    {"/", 0},
-    {"/order", 0},
-    {"/product", 0},
-    {"/basket", 0},
-    {"/help", 0},
-    {"unknown", 0},
+    { "/", 0 },
+    { "/order", 0 },
+    { "/product", 0 },
+    { "/basket", 0 },
+    { "/help", 0 },
+    { "unknown", 0 },
   };
   const Stats default_constructed;
 
@@ -82,8 +88,9 @@ void TestAbsentParts() {
   ASSERT_EQUAL(default_constructed.GetUriStats(), expected_url_count);
 }
 
-int main() {
-  TestRunner tr;
-  RUN_TEST(tr, TestBasic);
-  RUN_TEST(tr, TestAbsentParts);
+int main()
+{
+  TestRunner trunner;
+  RUN_TEST(trunner, TestBasic);
+  RUN_TEST(trunner, TestAbsentParts);
 }
