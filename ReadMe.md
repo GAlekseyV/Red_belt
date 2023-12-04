@@ -36,3 +36,7 @@
 4. [AirportCounter](/Week_4/task_4_airportCounter/task.md)
 5. [Текстовый редактор](/Week_4/task_5_textEditor/task.md)
 6. [Статистика Web-сервера](/Week_4/task_6_webServer/task.md)
+
+## Неделя 5. Move-семантика и базовая многопоточность
+
+1. [Считалка Иосифа](/Week_5/task_1_josephus/task.md)
