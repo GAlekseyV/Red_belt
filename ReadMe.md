@@ -40,3 +40,4 @@
 ## Неделя 5. Move-семантика и базовая многопоточность
 
 1. [Считалка Иосифа](/Week_5/task_1_josephus/task.md)
+2. [Группировка строк](/Week_5/task_2_groupStrings/task.md)
