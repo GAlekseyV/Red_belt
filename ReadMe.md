@@ -41,3 +41,5 @@
 
 1. [Считалка Иосифа](/Week_5/task_1_josephus/task.md)
 2. [Группировка строк](/Week_5/task_2_groupStrings/task.md)
+3. [Оператор присваивания для SimpleVector](/Week_5/task_3_simpleVector/task.md)
+4. [Разбиение на предложения](/Week_5/task_4_splitIntoSentences/task.md)
