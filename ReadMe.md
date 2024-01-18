@@ -43,3 +43,4 @@
 2. [Группировка строк](/Week_5/task_2_groupStrings/task.md)
 3. [Оператор присваивания для SimpleVector](/Week_5/task_3_simpleVector/task.md)
 4. [Разбиение на предложения](/Week_5/task_4_splitIntoSentences/task.md)
+5. [Сортировка слиянием - 3](/Week_5/task_6_mergeSort3/task.md)
