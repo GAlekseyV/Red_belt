@@ -2,19 +2,20 @@
 #include "test_runner.h"
 
 #include <algorithm>
-#include <iostream>
-#include <vector>
 #include <string>
+#include <utility>
+#include <vector>
+
 using namespace std;
 
 void TestConstruction() {
   SimpleVector<int> empty;
-  ASSERT_EQUAL(empty.Size(), 0u);
-  ASSERT_EQUAL(empty.Capacity(), 0u);
+  ASSERT_EQUAL(empty.Size(), 0U);
+  ASSERT_EQUAL(empty.Capacity(), 0U);
   ASSERT(empty.begin() == empty.end());
 
   SimpleVector<string> five_strings(5);
-  ASSERT_EQUAL(five_strings.Size(), 5u);
+  ASSERT_EQUAL(five_strings.Size(), 5U);
   ASSERT(five_strings.Size() <= five_strings.Capacity());
   for (auto& item : five_strings) {
     ASSERT(item.empty());
@@ -24,21 +25,21 @@ void TestConstruction() {
 }
 
 void TestPushBack() {
-  SimpleVector<int> v;
+  SimpleVector<int> simple_vector;
   for (int i = 10; i >= 1; --i) {
-    v.PushBack(i);
-    ASSERT(v.Size() <= v.Capacity());
+    simple_vector.PushBack(i);
+    ASSERT(simple_vector.Size() <= simple_vector.Capacity());
   }
-  sort(begin(v), end(v));
+  sort(begin(simple_vector), end(simple_vector));
 
   const vector<int> expected = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-  ASSERT(equal(begin(v), end(v), begin(expected)));
+  ASSERT(equal(begin(simple_vector), end(simple_vector), begin(expected)));
 }
 
 class StringNonCopyable : public string {
 public:
   using string::string;
-  StringNonCopyable(string&& other) : string(move(other)) {}
+  explicit StringNonCopyable(string &&other) : string(std::move(other)) {}
   StringNonCopyable(const StringNonCopyable&) = delete;
   StringNonCopyable(StringNonCopyable&&) = default;
   StringNonCopyable& operator=(const StringNonCopyable&) = delete;
@@ -46,20 +47,20 @@ public:
 };
 
 void TestNoCopy() {
-  SimpleVector<StringNonCopyable> strings;
+  SimpleVector<StringNonCopyable> strs;
   static const int SIZE = 10;
   for (int i = 0; i < SIZE; ++i) {
-    strings.PushBack(StringNonCopyable(to_string(i)));
+    strs.PushBack(StringNonCopyable(to_string(i)));
   }
   for (int i = 0; i < SIZE; ++i) {
-    ASSERT_EQUAL(strings[i], to_string(i));
+    ASSERT_EQUAL(strs[i], to_string(i));
   }
 }
 
 int main() {
-  TestRunner tr;
-  RUN_TEST(tr, TestConstruction);
-  RUN_TEST(tr, TestPushBack);
-  RUN_TEST(tr, TestNoCopy);
+  TestRunner trunner;
+  RUN_TEST(trunner, TestConstruction);
+  RUN_TEST(trunner, TestPushBack);
+  RUN_TEST(trunner, TestNoCopy);
   return 0;
 }
