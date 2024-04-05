@@ -63,7 +63,7 @@ set(Week_5
         task_4_splitIntoSentences
         task_5_simpleVector2
         task_6_mergeSort3
-
+        task_7_priority_container
         task_8_matrix_sum
         task_9_blog
         task_10_synchronized
