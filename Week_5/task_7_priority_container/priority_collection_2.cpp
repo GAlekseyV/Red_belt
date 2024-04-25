@@ -59,7 +59,7 @@ public:
   }
 
   // Получить объект с максимальным приоритетом и его приоритет
-  pair<const T &, int> GetMax() const
+  [[nodiscard]] pair<const T &, int> GetMax() const
   {
     return objects[prev(sorted_objects.end())->second];
   };

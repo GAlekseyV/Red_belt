@@ -43,4 +43,7 @@
 2. [Группировка строк](/Week_5/task_2_groupStrings/task.md)
 3. [Оператор присваивания для SimpleVector](/Week_5/task_3_simpleVector/task.md)
 4. [Разбиение на предложения](/Week_5/task_4_splitIntoSentences/task.md)
-5. [Сортировка слиянием - 3](/Week_5/task_6_mergeSort3/task.md)
+5. [Move-семантика в SimpleVector](/Week_5/task_5_simpleVector2/task.md)
+6. [Сортировка слиянием - 3](/Week_5/task_6_mergeSort3/task.md)
+7. [Контейнер с приоритетами](/Week_5/task_7_priority_container/task.md)
+8. [Суммирование матрицы](/Week_5/task_8_matrix_sum/task.md)
