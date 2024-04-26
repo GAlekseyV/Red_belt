@@ -48,3 +48,4 @@
 7. [Контейнер с приоритетами](/Week_5/task_7_priority_container/task.md)
 8. [Суммирование матрицы](/Week_5/task_8_matrix_sum/task.md)
 9. [Исследование блогов](/Week_5/task_9_blog/task.md)
+10. [Шаблон Synchronized](/Week_5/task_10_synchronized/task.md)

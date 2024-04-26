@@ -1,31 +1,36 @@
 #include "test_runner.h"
 
-#include <numeric>
-#include <vector>
-#include <string>
+#include <cstddef>
+#include <deque>
+#include <functional>
 #include <future>
 #include <mutex>
-#include <queue>
-#include <thread>
+#include <numeric>
+#include <string>
+#include <utility>
+#include <vector>
 using namespace std;
 
 // Реализуйте шаблон Synchronized<T>.
 // Метод GetAccess должен возвращать структуру, в которой есть поле T& value.
-template <typename T>
-class Synchronized {
+template<typename T>
+class Synchronized
+{
 public:
   explicit Synchronized(T initial = T())
-  : value_(move(initial))
+    : value_(std::move(initial))
   {
   }
 
-  struct Access {
-    T& ref_to_value;
+  struct Access
+  {
+    T &ref_to_value;
     lock_guard<mutex> guard;
   };
 
-  Access GetAccess(){
-    return {value_, lock_guard(m)};
+  Access GetAccess()
+  {
+    return { value_, lock_guard(m) };
   }
 
 private:
@@ -33,7 +38,8 @@ private:
   T value_;
 };
 
-void TestConcurrentUpdate() {
+void TestConcurrentUpdate()
+{
   Synchronized<string> common_string;
 
   const size_t add_count = 50000;
@@ -53,7 +59,8 @@ void TestConcurrentUpdate() {
   ASSERT_EQUAL(common_string.GetAccess().ref_to_value.size(), 2 * add_count);
 }
 
-vector<int> Consume(Synchronized<deque<int>>& common_queue) {
+vector<int> Consume(Synchronized<deque<int>> &common_queue)
+{
   vector<int> got;
 
   for (;;) {
@@ -70,7 +77,7 @@ vector<int> Consume(Synchronized<deque<int>>& common_queue) {
       // Размер критической секции существенно влияет на быстродействие
       // многопоточных программ.
       auto access = common_queue.GetAccess();
-      q = move(access.ref_to_value);
+      q = std::move(access.ref_to_value);
     }
 
     for (int item : q) {
@@ -83,7 +90,8 @@ vector<int> Consume(Synchronized<deque<int>>& common_queue) {
   }
 }
 
-void TestProducerConsumer() {
+void TestProducerConsumer()
+{
   Synchronized<deque<int>> common_queue;
 
   auto consumer = async(Consume, ref(common_queue));
@@ -99,8 +107,9 @@ void TestProducerConsumer() {
   ASSERT_EQUAL(consumer.get(), expected);
 }
 
-int main() {
-  TestRunner tr;
-  RUN_TEST(tr, TestConcurrentUpdate);
-  RUN_TEST(tr, TestProducerConsumer);
+int main()
+{
+  TestRunner trunner;
+  RUN_TEST(trunner, TestConcurrentUpdate);
+  RUN_TEST(trunner, TestProducerConsumer);
 }
