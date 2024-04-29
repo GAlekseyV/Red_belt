@@ -67,6 +67,7 @@ set(Week_5
         task_8_matrix_sum
         task_9_blog
         task_10_synchronized
+        task_11_ConcurrentMap
         Account
         samples
         )
