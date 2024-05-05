@@ -73,6 +73,7 @@ set(Week_5
         )
 
 set(Week_6
+        part_1
         )
 
 # create a project file per tutorial
